@@ -1,0 +1,2 @@
+# globetrotter-bot
+globetrotter-bot
