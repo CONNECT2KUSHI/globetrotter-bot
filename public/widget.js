@@ -1,5 +1,5 @@
 (function () {
-  const API_URL = 'https://YOUR-RENDER-URL.onrender.com/chat';
+ const API_URL = 'https://globetrotter-bot.onrender.com/chat';
   let history = [];
 
   const style = document.createElement('style');
