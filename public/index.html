@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Team Globetrotter — AI Assistant Demo</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      min-height:100vh;
+      background:linear-gradient(135deg, #0a1a0f 0%, #0d2b18 50%, #0a1a0f 100%);
+      display:flex; align-items:center; justify-content:center;
+      font-family:sans-serif; color:white;
+    }
+    .center {
+      text-align:center; padding:40px 20px;
+    }
+    .logo { font-size:48px; margin-bottom:16px; }
+    h1 {
+      font-size:32px; font-weight:700;
+      color:#2d9e5f; margin-bottom:12px;
+    }
+    p {
+      font-size:16px; color:rgba(255,255,255,0.6);
+      max-width:400px; margin:0 auto 24px; line-height:1.7;
+    }
+    .badge {
+      display:inline-flex; align-items:center; gap:8px;
+      background:rgba(45,158,95,0.15);
+      border:1px solid rgba(45,158,95,0.3);
+      padding:8px 20px; border-radius:100px;
+      font-size:13px; color:#2d9e5f;
+    }
+    .dot {
+      width:7px; height:7px; border-radius:50%;
+      background:#7FFF00; box-shadow:0 0 6px #7FFF00;
+      animation:pulse 2s infinite;
+    }
+    @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+    .arrow {
+      position:fixed; bottom:100px; right:30px;
+      font-size:13px; color:rgba(255,255,255,0.4);
+      animation:bounce 1.5s infinite;
+    }
+    @keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(6px);}}
+  </style>
+</head>
+<body>
+  <div class="center">
+    <div class="logo">🗺️</div>
+    <h1>Team Globetrotter</h1>
+    <p>
+      AI travel assistant — trained on all our trips to Ladakh, 
+      Kashmir, Bhutan, Goa and beyond. Ask it anything!
+    </p>
+    <div class="badge">
+      <span class="dot"></span>
+      AI Assistant is Online · Click the button below 👇
+    </div>
+  </div>
+  <div class="arrow">👇 Chat with us</div>
+
+  <script src="./widget.js"></script>
+</body>
+</html>
