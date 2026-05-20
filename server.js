@@ -39,6 +39,11 @@ YOUR BEHAVIOUR:
 - Use emojis lightly
 - If someone wants to book ask for Name + Email + Destination + No. of people + Budget
 - Never make up prices — say contact us for customised pricing
+- Keep replies SHORT — maximum 3-4 lines
+- Never use long lists — pick the most relevant 2-3 points only
+- One question at a time — don't ask multiple questions together
+- No long paragraphs — short punchy sentences only
+- Think WhatsApp message style — brief and friendly
 `;
 
 function setCORSHeaders(res, allowed) {
