@@ -1,6 +1,12 @@
 const http = require('http');
 const https = require('https');
 
+const ALLOWED_DOMAINS = [
+  'globetrotter-bot.vercel.app',  // your demo page
+  'localhost',                     // for local testing
+  '127.0.0.1',                    // for local testing
+];
+
 const GLOBETROTTER_CONTEXT = `
 You are a friendly, enthusiastic travel assistant for Team Globetrotter
 (team-globetrotter.com), a travel company based in Gurugram, India.
@@ -35,15 +41,33 @@ YOUR BEHAVIOUR:
 - Never make up prices — say contact us for customised pricing
 `;
 
-function setCORSHeaders(res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+function setCORSHeaders(res, allowed) {
+  if (allowed) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+  }
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
   res.setHeader('Access-Control-Max-Age', '86400');
 }
 
+function isDomainAllowed(req) {
+  const origin = req.headers.origin || '';
+  const referer = req.headers.referer || '';
+  const host = req.headers.host || '';
+
+  // Allow if no origin (direct API calls, Render health checks)
+  if (!origin && !referer) return true;
+
+  return ALLOWED_DOMAINS.some(domain =>
+    origin.includes(domain) ||
+    referer.includes(domain) ||
+    host.includes(domain)
+  );
+}
+
 const server = http.createServer((req, res) => {
-  setCORSHeaders(res);
+  const allowed = isDomainAllowed(req);
+  setCORSHeaders(res, allowed);
 
   if (req.method === 'OPTIONS') {
     res.writeHead(204);
@@ -58,6 +82,16 @@ const server = http.createServer((req, res) => {
   }
 
   if (req.method === 'POST' && req.url === '/chat') {
+
+    // Block unauthorized domains
+    if (!allowed) {
+      res.writeHead(403, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        reply: 'Unauthorized. Please contact Desi Nomad to activate this bot for your website.'
+      }));
+      return;
+    }
+
     let body = '';
     req.on('data', chunk => body += chunk);
     req.on('end', () => {
