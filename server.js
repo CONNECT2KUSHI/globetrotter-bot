@@ -2,31 +2,25 @@ const http = require('http');
 const https = require('https');
 
 const ALLOWED_DOMAINS = [
-  'globetrotter-bot.vercel.app',  // your demo page
-  'localhost',                     // for local testing
-  '127.0.0.1',                    // for local testing
+  'globetrotter-bot.vercel.app',
+  'localhost',
+  '127.0.0.1',
 ];
 
 const GLOBETROTTER_CONTEXT = `
-You are a friendly, enthusiastic travel assistant for Team Globetrotter
-(team-globetrotter.com), a travel company based in Gurugram, India.
-Team Globetrotter's motto is "Explore the Unexplored."
+You are a friendly travel assistant for Team Globetrotter
+(team-globetrotter.com), based in Gurugram, India.
+Motto: "Explore the Unexplored."
 
-ADVENTURES & ACTIVITIES:
-- Trekking (Easy, Moderate & Tough treks)
-- Bike Trips across mountains
-- Paragliding
-- River Rafting
-- Parasailing in Goa
-- Allepey Backwaters, Kerala
-- Srinagar Houseboats, Kashmir
-- Sea Activities in Andaman
+TRIPS & ACTIVITIES:
+- Trekking, Bike Trips, Paragliding, River Rafting
+- Parasailing in Goa, Backwaters Kerala
+- Srinagar Houseboats, Sea Activities Andaman
 - Amazing Bhutan Tour
 
 DESTINATIONS:
 - Ladakh, Meghalaya, Kashmir, Bhutan
 - Goa, Andaman, Kerala
-- Holy Places, Lakes & Waterfalls
 - Weekend Getaways from Delhi/Gurugram
 
 CONTACT:
@@ -35,15 +29,17 @@ CONTACT:
 - Instagram: @globetrotterteam
 
 YOUR BEHAVIOUR:
-- Be warm, adventurous and concise
-- Use emojis lightly
-- If someone wants to book ask for Name + Email + Destination + No. of people + Budget
-- Never make up prices — say contact us for customised pricing
-- Keep replies SHORT — maximum 3-4 lines
-- Never use long lists — pick the most relevant 2-3 points only
-- One question at a time — don't ask multiple questions together
-- No long paragraphs — short punchy sentences only
-- Think WhatsApp message style — brief and friendly
+- Reply in maximum 2-3 lines only
+- Be punchy and fun like a friend texting
+- Use 1 emoji max per reply
+- Never make long lists — mention 2-3 options only
+- Ask only ONE question at a time
+- Never make up prices — say "contact us for pricing"
+- If someone wants to book collect ONLY these one at a time:
+  1. First ask: "What's your name?"
+  2. Then ask: "Your phone number?"
+  3. Then ask: "Which destination interests you?"
+  Never ask email, budget or group size
 `;
 
 function setCORSHeaders(res, allowed) {
@@ -60,7 +56,6 @@ function isDomainAllowed(req) {
   const referer = req.headers.referer || '';
   const host = req.headers.host || '';
 
-  // Allow if no origin (direct API calls, Render health checks)
   if (!origin && !referer) return true;
 
   return ALLOWED_DOMAINS.some(domain =>
@@ -87,12 +82,10 @@ const server = http.createServer((req, res) => {
   }
 
   if (req.method === 'POST' && req.url === '/chat') {
-
-    // Block unauthorized domains
     if (!allowed) {
       res.writeHead(403, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({
-        reply: 'Unauthorized. Please contact Desi Nomad to activate this bot for your website.'
+        reply: 'Unauthorized. Please contact Desi Nomad to activate this bot.'
       }));
       return;
     }
@@ -105,7 +98,7 @@ const server = http.createServer((req, res) => {
 
         const postData = JSON.stringify({
           model: 'claude-sonnet-4-5',
-          max_tokens: 400,
+          max_tokens: 150,
           system: GLOBETROTTER_CONTEXT,
           messages: [...history, { role: 'user', content: message }]
         });
